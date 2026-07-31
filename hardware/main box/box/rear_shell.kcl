@@ -1,0 +1,468 @@
+// Rugged terminal rear shell module
+// Rear structural skin with service openings, Pi mounts, seam lip, and reinforced hanger.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+import unitCylY from "unit_cyl_y.kcl"
+
+rearOuterPlane = {
+  origin = [0mm, 0mm, 0mm],
+  xAxis = [1, 0, 0],
+  yAxis = [0, 0, -1]
+}
+rearOuterProfile = sketch(on = rearOuterPlane) {
+  top = line(start = [var 40.5mm, var 84mm], end = [var -40.5mm, var 84mm])
+  topLeft = arc(start = [var -40.5mm, var 84mm], end = [var -47.5mm, var 77mm], center = [var -40.5mm, var 77mm])
+  left = line(start = [var -47.5mm, var 77mm], end = [var -47.5mm, var -77mm])
+  bottomLeft = arc(start = [var -47.5mm, var -77mm], end = [var -40.5mm, var -84mm], center = [var -40.5mm, var -77mm])
+  bottom = line(start = [var -40.5mm, var -84mm], end = [var 40.5mm, var -84mm])
+  bottomRight = arc(start = [var 40.5mm, var -84mm], end = [var 47.5mm, var -77mm], center = [var 40.5mm, var -77mm])
+  right = line(start = [var 47.5mm, var -77mm], end = [var 47.5mm, var 77mm])
+  topRight = arc(start = [var 47.5mm, var 77mm], end = [var 40.5mm, var 84mm], center = [var 40.5mm, var 77mm])
+  coincident([top.end, topLeft.start])
+  coincident([topLeft.end, left.start])
+  coincident([left.end, bottomLeft.start])
+  coincident([bottomLeft.end, bottom.start])
+  coincident([bottom.end, bottomRight.start])
+  coincident([bottomRight.end, right.start])
+  coincident([right.end, topRight.start])
+  coincident([topRight.end, top.start])
+  horizontal(top)
+  vertical(left)
+  horizontal(bottom)
+  vertical(right)
+  vertical([topLeft.center, topLeft.start])
+  horizontal([topLeft.center, topLeft.end])
+  horizontal([bottomLeft.center, bottomLeft.start])
+  vertical([bottomLeft.center, bottomLeft.end])
+  vertical([bottomRight.center, bottomRight.start])
+  horizontal([bottomRight.center, bottomRight.end])
+  horizontal([topRight.center, topRight.start])
+  vertical([topRight.center, topRight.end])
+  horizontal([topLeft.center, topRight.center])
+  horizontal([bottomLeft.center, bottomRight.center])
+  vertical([topLeft.center, bottomLeft.center])
+  vertical([topRight.center, bottomRight.center])
+  radius(topLeft) == outerCornerRadius
+  radius(bottomLeft) == outerCornerRadius
+  radius(bottomRight) == outerCornerRadius
+  radius(topRight) == outerCornerRadius
+  horizontalDistance([topLeft.center, topRight.center]) == enclosureWidth - (2 * outerCornerRadius)
+  verticalDistance([bottomRight.center, topRight.center]) == enclosureBodyHeight - (2 * outerCornerRadius)
+  horizontalDistance([ORIGIN, topRight.center]) == enclosureWidth / 2 - outerCornerRadius
+  verticalDistance([ORIGIN, topRight.center]) == enclosureBodyHeight / 2 - outerCornerRadius
+}
+rearOuterRegion = region(
+  segments = [
+    rearOuterProfile.top,
+    rearOuterProfile.topLeft
+  ],
+  intersectionIndex = -1,
+  direction = CCW,
+)
+rearOuterBody = extrude(rearOuterRegion, length = rearDepth)
+
+rearCavityPlane = {
+  origin = [0mm, -0.5mm, 0mm],
+  xAxis = [1, 0, 0],
+  yAxis = [0, 0, -1]
+}
+rearInnerProfile = sketch(on = rearCavityPlane) {
+  top = line(start = [var 40.5mm, var 81mm], end = [var -40.5mm, var 81mm])
+  topLeft = arc(start = [var -40.5mm, var 81mm], end = [var -44.5mm, var 77mm], center = [var -40.5mm, var 77mm])
+  left = line(start = [var -44.5mm, var 77mm], end = [var -44.5mm, var -77mm])
+  bottomLeft = arc(start = [var -44.5mm, var -77mm], end = [var -40.5mm, var -81mm], center = [var -40.5mm, var -77mm])
+  bottom = line(start = [var -40.5mm, var -81mm], end = [var 40.5mm, var -81mm])
+  bottomRight = arc(start = [var 40.5mm, var -81mm], end = [var 44.5mm, var -77mm], center = [var 40.5mm, var -77mm])
+  right = line(start = [var 44.5mm, var -77mm], end = [var 44.5mm, var 77mm])
+  topRight = arc(start = [var 44.5mm, var 77mm], end = [var 40.5mm, var 81mm], center = [var 40.5mm, var 77mm])
+  coincident([top.end, topLeft.start])
+  coincident([topLeft.end, left.start])
+  coincident([left.end, bottomLeft.start])
+  coincident([bottomLeft.end, bottom.start])
+  coincident([bottom.end, bottomRight.start])
+  coincident([bottomRight.end, right.start])
+  coincident([right.end, topRight.start])
+  coincident([topRight.end, top.start])
+  horizontal(top)
+  vertical(left)
+  horizontal(bottom)
+  vertical(right)
+  vertical([topLeft.center, topLeft.start])
+  horizontal([topLeft.center, topLeft.end])
+  horizontal([bottomLeft.center, bottomLeft.start])
+  vertical([bottomLeft.center, bottomLeft.end])
+  vertical([bottomRight.center, bottomRight.start])
+  horizontal([bottomRight.center, bottomRight.end])
+  horizontal([topRight.center, topRight.start])
+  vertical([topRight.center, topRight.end])
+  horizontal([topLeft.center, topRight.center])
+  horizontal([bottomLeft.center, bottomRight.center])
+  vertical([topLeft.center, bottomLeft.center])
+  vertical([topRight.center, bottomRight.center])
+  radius(topLeft) == innerCornerRadius
+  radius(bottomLeft) == innerCornerRadius
+  radius(bottomRight) == innerCornerRadius
+  radius(topRight) == innerCornerRadius
+  horizontalDistance([topLeft.center, topRight.center]) == enclosureWidth - (2 * wallThickness) - (2 * innerCornerRadius)
+  verticalDistance([bottomRight.center, topRight.center]) == enclosureBodyHeight - (2 * wallThickness) - (2 * innerCornerRadius)
+  horizontalDistance([ORIGIN, topRight.center]) == enclosureWidth / 2 - wallThickness - innerCornerRadius
+  verticalDistance([ORIGIN, topRight.center]) == enclosureBodyHeight / 2 - wallThickness - innerCornerRadius
+}
+rearInnerRegion = region(
+  segments = [
+    rearInnerProfile.top,
+    rearInnerProfile.topLeft
+  ],
+  intersectionIndex = -1,
+  direction = CCW,
+)
+rearCavityCutter = extrude(rearInnerRegion, length = rearDepth - wallThickness + csgOverlap)
+rearHollowBody = subtract([rearOuterBody], tools = [rearCavityCutter])
+
+// Four rear-entry M3 clearance holes and exposed-head counterbores.
+screwThroughSeed = clone(unitCylY)
+  |> scale(
+       x = m3ClearanceDiameter / 1mm,
+       y = 24,
+       z = m3ClearanceDiameter / 1mm,
+       global = true,
+     )
+  |> translate(
+       x = -shellFastenerX,
+       y = 11mm,
+       z = shellFastenerZ,
+       global = true,
+     )
+screwThroughTopRight = clone(screwThroughSeed)
+  |> translate(x = 2 * shellFastenerX, global = true)
+screwThroughBottomLeft = clone(screwThroughSeed)
+  |> translate(z = -2 * shellFastenerZ, global = true)
+screwThroughBottomRight = clone(screwThroughTopRight)
+  |> translate(z = -2 * shellFastenerZ, global = true)
+counterboreSeed = clone(unitCylY)
+  |> scale(
+       x = m3HeadDiameter / 1mm,
+       y = 3,
+       z = m3HeadDiameter / 1mm,
+       global = true,
+     )
+  |> translate(
+       x = -shellFastenerX,
+       y = 21.4mm,
+       z = shellFastenerZ,
+       global = true,
+     )
+counterboreTopRight = clone(counterboreSeed)
+  |> translate(x = 2 * shellFastenerX, global = true)
+counterboreBottomLeft = clone(counterboreSeed)
+  |> translate(z = -2 * shellFastenerZ, global = true)
+counterboreBottomRight = clone(counterboreTopRight)
+  |> translate(z = -2 * shellFastenerZ, global = true)
+
+// Raspberry Pi side-port service windows and bottom charging interface.
+rightUsbLowerCutter = clone(unitBox)
+  |> scale(
+       x = 7,
+       y = 18,
+       z = 18,
+       global = true,
+     )
+  |> translate(
+       x = 46.5mm,
+       y = 11mm,
+       z = 22mm,
+       global = true,
+     )
+rightUsbUpperCutter = clone(rightUsbLowerCutter)
+  |> translate(z = 25mm, global = true)
+leftIoCutter = clone(unitBox)
+  |> scale(
+       x = 7,
+       y = 17,
+       z = 32,
+       global = true,
+     )
+  |> translate(
+       x = -46.5mm,
+       y = 11mm,
+       z = 22mm,
+       global = true,
+     )
+bottomUsbCThrough = clone(unitBox)
+  |> scale(
+       x = 14,
+       y = 12,
+       z = 7,
+       global = true,
+     )
+  |> translate(y = 12mm, z = -82.5mm, global = true)
+bottomUsbCRecess = clone(unitBox)
+  |> scale(
+       x = 18,
+       y = 16,
+       z = 2,
+       global = true,
+     )
+  |> translate(y = 12mm, z = -83.5mm, global = true)
+
+// Shallow radio-style vent recesses retain printable wall thickness for hidden mesh.
+rightVentRecess = clone(unitBox)
+  |> scale(
+       x = 1.8,
+       y = 32,
+       z = 42,
+       global = true,
+     )
+  |> translate(
+       x = 47mm,
+       y = 11mm,
+       z = -20mm,
+       global = true,
+     )
+leftVentRecess = clone(rightVentRecess)
+  |> translate(x = -94mm, global = true)
+
+rearCutThroughTopLeft = subtract([rearHollowBody], tools = [screwThroughSeed])
+rearCutThroughTopRight = subtract([rearCutThroughTopLeft], tools = [screwThroughTopRight])
+rearCutThroughBottomLeft = subtract([rearCutThroughTopRight], tools = [screwThroughBottomLeft])
+rearCutThroughBottomRight = subtract([rearCutThroughBottomLeft], tools = [screwThroughBottomRight])
+rearCutCounterTopLeft = subtract([rearCutThroughBottomRight], tools = [counterboreSeed])
+rearCutCounterTopRight = subtract([rearCutCounterTopLeft], tools = [counterboreTopRight])
+rearCutCounterBottomLeft = subtract([rearCutCounterTopRight], tools = [counterboreBottomLeft])
+rearCutCounterBottomRight = subtract([rearCutCounterBottomLeft], tools = [counterboreBottomRight])
+rearCutRightUsbLower = subtract([rearCutCounterBottomRight], tools = [rightUsbLowerCutter])
+rearCutRightUsbUpper = subtract([rearCutRightUsbLower], tools = [rightUsbUpperCutter])
+rearCutLeftIo = subtract([rearCutRightUsbUpper], tools = [leftIoCutter])
+rearCutBottomUsb = subtract([rearCutLeftIo], tools = [bottomUsbCThrough])
+rearCutBottomRecess = subtract([rearCutBottomUsb], tools = [bottomUsbCRecess])
+rearCutRightVent = subtract([rearCutBottomRecess], tools = [rightVentRecess])
+rearSkin = subtract([rearCutRightVent], tools = [leftVentRecess])
+  |> appearance(color = oliveGreen, roughness = 84, metalness = 0)
+
+// Reinforced closed lanyard loop with 6 mm-class clear hole.
+hangerOuter = clone(unitCylY)
+  |> scale(
+       x = 18,
+       y = 10,
+       z = 18,
+       global = true,
+     )
+  |> translate(y = 11mm, z = 86mm, global = true)
+hangerHole = clone(unitCylY)
+  |> scale(
+       x = 6.4,
+       y = 11,
+       z = 6.4,
+       global = true,
+     )
+  |> translate(y = 11mm, z = 86mm, global = true)
+hangerRing = subtract([hangerOuter], tools = [hangerHole])
+  |> appearance(color = deepOlive, roughness = 86, metalness = 0)
+hangerReliefLeft = clone(unitBox)
+  |> scale(
+       x = 7,
+       y = 10,
+       z = 14,
+       global = true,
+     )
+  |> rotate(axis = Y, angle = -22deg, global = true)
+  |> translate(
+       x = -6mm,
+       y = 11mm,
+       z = 80mm,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 86, metalness = 0)
+hangerReliefRight = clone(unitBox)
+  |> scale(
+       x = 7,
+       y = 10,
+       z = 14,
+       global = true,
+     )
+  |> rotate(axis = Y, angle = 22deg, global = true)
+  |> translate(
+       x = 6mm,
+       y = 11mm,
+       z = 80mm,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 86, metalness = 0)
+
+// Segmented nesting lip and alignment pins project across the shell seam.
+lipTop = clone(unitBox)
+  |> scale(
+       x = 75,
+       y = 3,
+       z = 1.6,
+       global = true,
+     )
+  |> translate(y = -1.4mm, z = 80.4mm, global = true)
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+lipBottom = clone(lipTop)
+  |> translate(z = -160.8mm, global = true)
+lipRight = clone(unitBox)
+  |> scale(
+       x = 1.6,
+       y = 3,
+       z = 145,
+       global = true,
+     )
+  |> translate(x = 44.2mm, y = -1.4mm, global = true)
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+lipLeft = clone(lipRight)
+  |> translate(x = -88.4mm, global = true)
+alignmentPinRight = clone(unitCylY)
+  |> scale(
+       x = 3,
+       y = 3.4,
+       z = 3,
+       global = true,
+     )
+  |> translate(
+       x = 30mm,
+       y = -1.6mm,
+       z = 79mm,
+       global = true,
+     )
+  |> appearance(color = oliveGreen, roughness = 82, metalness = 0)
+alignmentPinLeft = clone(alignmentPinRight)
+  |> translate(x = -60mm, global = true)
+
+// Pi standoffs use the official 49 x 58 mm mounting pattern after board rotation.
+piPostOuter = clone(unitCylY)
+  |> scale(
+       x = 6,
+       y = 8,
+       z = 6,
+       global = true,
+     )
+piPostBore = clone(unitCylY)
+  |> scale(
+       x = piMountHoleDiameter / 1mm,
+       y = 9,
+       z = piMountHoleDiameter / 1mm,
+       global = true,
+     )
+piPostRing = subtract([piPostOuter], tools = [piPostBore])
+  |> appearance(color = oliveGreen, roughness = 82, metalness = 0)
+piPostTopLeft = clone(piPostRing)
+  |> translate(
+       x = -piMountSpanX / 2,
+       y = 15.3mm,
+       z = piBoardCenterZ + piMountSpanZ / 2,
+       global = true,
+     )
+piPostTopRight = clone(piPostRing)
+  |> translate(
+       x = piMountSpanX / 2,
+       y = 15.3mm,
+       z = piBoardCenterZ + piMountSpanZ / 2,
+       global = true,
+     )
+piPostBottomLeft = clone(piPostRing)
+  |> translate(
+       x = -piMountSpanX / 2,
+       y = 15.3mm,
+       z = piBoardCenterZ - (piMountSpanZ / 2),
+       global = true,
+     )
+piPostBottomRight = clone(piPostRing)
+  |> translate(
+       x = piMountSpanX / 2,
+       y = 15.3mm,
+       z = piBoardCenterZ - (piMountSpanZ / 2),
+       global = true,
+     )
+
+// 2.5 mm ribs form cable channels, corner reinforcement, and mesh mounting ledges.
+cableRailLeft = clone(unitBox)
+  |> scale(
+       x = internalRibThickness / 1mm,
+       y = 4,
+       z = 66,
+       global = true,
+     )
+  |> translate(
+       x = -6mm,
+       y = 17mm,
+       z = -39mm,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+cableRailRight = clone(cableRailLeft)
+  |> translate(x = 12mm, global = true)
+cableRailLowerTie = clone(unitBox)
+  |> scale(
+       x = 14.5,
+       y = 4,
+       z = internalRibThickness / 1mm,
+       global = true,
+     )
+  |> translate(y = 17mm, z = -72mm, global = true)
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+cornerRibLeft = clone(unitBox)
+  |> scale(
+       x = 3,
+       y = 4,
+       z = 138,
+       global = true,
+     )
+  |> translate(x = -41mm, y = 17mm, global = true)
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+cornerRibRight = clone(cornerRibLeft)
+  |> translate(x = 82mm, global = true)
+rightMeshLedgeTop = clone(unitBox)
+  |> scale(
+       x = 3,
+       y = 30,
+       z = internalRibThickness / 1mm,
+       global = true,
+     )
+  |> translate(
+       x = 43.5mm,
+       y = 11mm,
+       z = 2mm,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+rightMeshLedgeBottom = clone(rightMeshLedgeTop)
+  |> translate(z = -44mm, global = true)
+leftMeshLedgeTop = clone(rightMeshLedgeTop)
+  |> translate(x = -87mm, global = true)
+leftMeshLedgeBottom = clone(rightMeshLedgeBottom)
+  |> translate(x = -87mm, global = true)
+
+export rearShellAssembly = flatten([
+  rearSkin,
+  hangerRing,
+  hangerReliefLeft,
+  hangerReliefRight,
+  lipTop,
+  lipBottom,
+  lipRight,
+  lipLeft,
+  alignmentPinRight,
+  alignmentPinLeft,
+  piPostTopLeft,
+  piPostTopRight,
+  piPostBottomLeft,
+  piPostBottomRight,
+  cableRailLeft,
+  cableRailRight,
+  cableRailLowerTie,
+  cornerRibLeft,
+  cornerRibRight,
+  rightMeshLedgeTop,
+  rightMeshLedgeBottom,
+  leftMeshLedgeTop,
+  leftMeshLedgeBottom
+])
+
+hide(rearOuterProfile)
+hide(rearInnerProfile)
+hide(unitBox)
+hide(unitCylY)
+rearShellAssembly

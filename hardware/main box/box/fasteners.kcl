@@ -1,0 +1,54 @@
+// M3 fastener hardware
+// Machine screw envelope and heat-set insert without modeled helical threads.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitCylY from "unit_cyl_y.kcl"
+
+m3Shaft = clone(unitCylY)
+  |> scale(
+       x = 3,
+       y = 35,
+       z = 3,
+       global = true,
+     )
+  |> translate(y = -17mm, global = true)
+  |> appearance(color = hardwareSteel, roughness = 24, metalness = 88)
+m3Head = clone(unitCylY)
+  |> scale(
+       x = 6.2,
+       y = 3,
+       z = 6.2,
+       global = true,
+     )
+  |> translate(y = 1.5mm, global = true)
+  |> appearance(color = hardwareSteel, roughness = 24, metalness = 88)
+m3DriveMark = clone(unitCylY)
+  |> scale(
+       x = 2.4,
+       y = 0.5,
+       z = 2.4,
+       global = true,
+     )
+  |> translate(y = 3.2mm, global = true)
+  |> appearance(color = graphite, roughness = 36, metalness = 50)
+export m3MachineScrew = flatten([m3Shaft, m3Head, m3DriveMark])
+
+insertOuter = clone(unitCylY)
+  |> scale(
+       x = 4.1,
+       y = 6,
+       z = 4.1,
+       global = true,
+     )
+insertBore = clone(unitCylY)
+  |> scale(
+       x = 3,
+       y = 7,
+       z = 3,
+       global = true,
+     )
+export m3HeatSetInsert = subtract([insertOuter], tools = [insertBore])
+  |> appearance(color = brass, roughness = 34, metalness = 74)
+
+hide(unitCylY)

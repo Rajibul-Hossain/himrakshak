@@ -1,0 +1,62 @@
+// Rugged terminal shared parameters
+// Editable envelope, print, interface, and finish dimensions.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+export enclosureWidth = 95mm
+export enclosureBodyHeight = 168mm
+export enclosureDepth = 45mm
+export frontDepth = 23mm
+export rearDepth = 22mm
+export wallThickness = 3mm
+export internalRibThickness = 2.5mm
+export outerCornerRadius = 7mm
+export innerCornerRadius = 4mm
+export csgOverlap = 0.5mm
+
+export displayVisibleWidth = 73mm
+export displayVisibleHeight = 49mm
+export displayRecessWidth = 75mm
+export displayRecessHeight = 51mm
+export displayCenterZ = 32mm
+
+export cameraBoardWidth = 25mm
+export cameraBoardHeight = 23.862mm
+export cameraMountHoleDiameter = 2.2mm
+export cameraOpeningDiameter = 9.5mm
+export cameraRecessDiameter = 16mm
+export cameraCenterZ = -1mm
+
+export piBoardWidth = 56mm
+export piBoardLength = 85mm
+export piMountSpanX = 49mm
+export piMountSpanZ = 58mm
+export piMountHoleDiameter = 2.7mm
+export piBoardCenterZ = 18mm
+export piBoardCenterY = 11.5mm
+
+export powerBankWidth = 70mm
+export powerBankHeight = 150mm
+export powerBankDepth = 20mm
+export powerBankCenterZ = -2mm
+export powerBankCenterY = -6.5mm
+
+export m3ClearanceDiameter = 3.4mm
+export m3HeadDiameter = 6.5mm
+export insertPilotDiameter = 4.2mm
+export shellBossDiameter = 9mm
+export shellFastenerX = 38mm
+export shellFastenerZ = 72mm
+
+export oliveGreen = "#596548"
+export deepOlive = "#3f4936"
+export tacticalBlack = "#151817"
+export rubberBlack = "#0b0d0c"
+export graphite = "#2a2f2d"
+export hardwareSteel = "#b8bec0"
+export brass = "#b08b43"
+export emergencyOrange = "#e46f22"
+export pcbGreen = "#24523b"
+export displayBlue = "#102d3b"
+export ledGreen = "#39c66a"
+export ledAmber = "#f0a43b"
+export ledBlue = "#39a7e8"

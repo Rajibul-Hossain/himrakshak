@@ -1,0 +1,18 @@
+// Unit Z-axis cylinder primitive
+// Origin-centered scalable cylinder for bottom and top details.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+unitCylZSketch = sketch(on = XY) {
+  centerPoint = point(at = [var 0mm, var 0mm])
+  outerCircle = circle(start = [var 0.5mm, var 0mm], center = [var 0mm, var 0mm])
+  coincident([centerPoint, ORIGIN])
+  coincident([outerCircle.center, centerPoint])
+  horizontal([outerCircle.center, outerCircle.start])
+  diameter(outerCircle) == 1mm
+}
+
+unitCylZRegion = region(segments = [unitCylZSketch.outerCircle])
+unitCylZBody = extrude(unitCylZRegion, length = 1mm, symmetric = true)
+hide(unitCylZSketch)
+
+export unitCylZ = unitCylZBody

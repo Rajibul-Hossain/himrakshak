@@ -1,0 +1,100 @@
+// Front control parts
+// Guided button caps, 6 x 6 mm tactile switches, emergency actuator, and light pipes.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+import unitCylY from "unit_cyl_y.kcl"
+
+smallButtonCap = clone(unitBox)
+  |> scale(
+       x = 9,
+       y = 2.4,
+       z = 9,
+       global = true,
+     )
+  |> translate(y = -2.5mm, global = true)
+  |> appearance(color = tacticalBlack, roughness = 66, metalness = 0)
+smallButtonStem = clone(unitBox)
+  |> scale(
+       x = 5.5,
+       y = 4.2,
+       z = 5.5,
+       global = true,
+     )
+  |> translate(y = 0.8mm, global = true)
+  |> appearance(color = graphite, roughness = 64, metalness = 0)
+smallTactileSwitch = clone(unitBox)
+  |> scale(
+       x = 6,
+       y = 3.5,
+       z = 6,
+       global = true,
+     )
+  |> translate(y = 4.6mm, global = true)
+  |> appearance(color = graphite, roughness = 42, metalness = 22)
+smallSwitchPlunger = clone(unitCylY)
+  |> scale(
+       x = 3,
+       y = 1.6,
+       z = 3,
+       global = true,
+     )
+  |> translate(y = 2.2mm, global = true)
+  |> appearance(color = hardwareSteel, roughness = 28, metalness = 65)
+export smallButtonAssembly = flatten([
+  smallButtonCap,
+  smallButtonStem,
+  smallTactileSwitch,
+  smallSwitchPlunger
+])
+
+emergencyCap = clone(unitCylY)
+  |> scale(
+       x = 18,
+       y = 3.2,
+       z = 18,
+       global = true,
+     )
+  |> translate(y = -2.8mm, global = true)
+  |> appearance(color = emergencyOrange, roughness = 52, metalness = 0)
+emergencyStem = clone(unitCylY)
+  |> scale(
+       x = 8,
+       y = 4.5,
+       z = 8,
+       global = true,
+     )
+  |> translate(y = 1mm, global = true)
+  |> appearance(color = graphite, roughness = 58, metalness = 0)
+emergencySwitch = clone(unitBox)
+  |> scale(
+       x = 6,
+       y = 3.5,
+       z = 6,
+       global = true,
+     )
+  |> translate(y = 5mm, global = true)
+  |> appearance(color = graphite, roughness = 42, metalness = 22)
+export emergencyButtonAssembly = flatten([
+  emergencyCap,
+  emergencyStem,
+  emergencySwitch
+])
+
+export clearLightPipe = clone(unitCylY)
+  |> scale(
+       x = 1.8,
+       y = 6,
+       z = 1.8,
+       global = true,
+     )
+  |> appearance(
+       color = "#d8f2f4",
+       roughness = 10,
+       metalness = 0,
+       opacity = 56,
+     )
+
+hide(unitBox)
+hide(unitCylY)

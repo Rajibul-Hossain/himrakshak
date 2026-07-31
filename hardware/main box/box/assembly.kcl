@@ -1,0 +1,429 @@
+// Rugged emergency field terminal core assembly
+// Unoriented seam-datum assembly of shells, electronics, fasteners, bumpers, and service parts.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import frontShellAssembly from "front_shell.kcl"
+import rearShellAssembly from "rear_shell.kcl"
+import displayModule from "display_module.kcl"
+import cameraModule from "camera_module.kcl"
+import raspberryPi4 from "raspberry_pi_4.kcl"
+import powerBank from "power_bank.kcl"
+import smallButtonAssembly from "control_parts.kcl"
+import emergencyButtonAssembly from "control_parts.kcl"
+import clearLightPipe from "control_parts.kcl"
+import gpsModule from "sensor_modules.kcl"
+import bme280Module from "sensor_modules.kcl"
+import mpu6050Module from "sensor_modules.kcl"
+import max30102Module from "sensor_modules.kcl"
+import loraModule from "sensor_modules.kcl"
+import ambientLightModule from "sensor_modules.kcl"
+import speakerModule from "audio_parts.kcl"
+import microphoneModule from "audio_parts.kcl"
+import buzzerModule from "audio_parts.kcl"
+import m3MachineScrew from "fasteners.kcl"
+import m3HeatSetInsert from "fasteners.kcl"
+import batteryCradle from "battery_cradle.kcl"
+import cornerBumper from "corner_bumper.kcl"
+import rearGrip from "rear_grip.kcl"
+import sideVentPanel from "side_vent_panel.kcl"
+import perimeterGasket from "gasket.kcl"
+import usbCAssembly from "usb_c_assembly.kcl"
+import smallSensorBracket from "sensor_brackets.kcl"
+import mediumSensorBracket from "sensor_brackets.kcl"
+import largeSensorBracket from "sensor_brackets.kcl"
+import cableClip from "cable_clip.kcl"
+import * from "parameters.kcl"
+
+frontShellPlaced = frontShellAssembly
+rearShellPlaced = rearShellAssembly
+gasketPlaced = perimeterGasket
+  |> translate(y = -0.2mm, global = true)
+displayPlaced = displayModule
+  |> translate(y = -20mm, z = displayCenterZ, global = true)
+cameraPlaced = cameraModule
+  |> translate(y = -15mm, z = cameraCenterZ, global = true)
+
+menuButton = clone(smallButtonAssembly)
+  |> translate(
+       x = -15mm,
+       y = -22.5mm,
+       z = -25mm,
+       global = true,
+     )
+upButton = clone(smallButtonAssembly)
+  |> translate(
+       x = 0mm,
+       y = -22.5mm,
+       z = -25mm,
+       global = true,
+     )
+downButton = clone(smallButtonAssembly)
+  |> translate(
+       x = 15mm,
+       y = -22.5mm,
+       z = -25mm,
+       global = true,
+     )
+backButton = clone(smallButtonAssembly)
+  |> translate(
+       x = 30mm,
+       y = -22.5mm,
+       z = -25mm,
+       global = true,
+     )
+powerButton = smallButtonAssembly
+  |> translate(
+       x = -30mm,
+       y = -22.5mm,
+       z = -25mm,
+       global = true,
+     )
+emergencyButton = emergencyButtonAssembly
+  |> translate(
+       x = 24mm,
+       y = -22.5mm,
+       z = -57mm,
+       global = true,
+     )
+
+powerLightPipe = clone(clearLightPipe)
+  |> appearance(
+       color = ledGreen,
+       roughness = 10,
+       metalness = 0,
+       opacity = 70,
+     )
+  |> translate(
+       x = 30mm,
+       y = -20mm,
+       z = -11mm,
+       global = true,
+     )
+gpsLightPipe = clone(clearLightPipe)
+  |> appearance(
+       color = ledBlue,
+       roughness = 10,
+       metalness = 0,
+       opacity = 70,
+     )
+  |> translate(
+       x = 36mm,
+       y = -20mm,
+       z = -11mm,
+       global = true,
+     )
+chargingLightPipe = clearLightPipe
+  |> appearance(
+       color = ledAmber,
+       roughness = 10,
+       metalness = 0,
+       opacity = 70,
+     )
+  |> translate(
+       x = 24mm,
+       y = -20mm,
+       z = -11mm,
+       global = true,
+     )
+
+speakerPlaced = speakerModule
+  |> translate(
+       x = -25mm,
+       y = -16.5mm,
+       z = -58mm,
+       global = true,
+     )
+microphonePlaced = microphoneModule
+  |> translate(
+       x = -5mm,
+       y = -17.2mm,
+       z = -55mm,
+       global = true,
+     )
+buzzerPlaced = buzzerModule
+  |> translate(
+       x = 0mm,
+       y = 14.5mm,
+       z = 70mm,
+       global = true,
+     )
+
+batteryCradlePlaced = batteryCradle
+  |> translate(y = powerBankCenterY, z = powerBankCenterZ, global = true)
+powerBankPlaced = powerBank
+  |> translate(y = powerBankCenterY, z = powerBankCenterZ, global = true)
+raspberryPiPlaced = raspberryPi4
+  |> translate(y = piBoardCenterY, z = piBoardCenterZ, global = true)
+
+gpsBracket = clone(largeSensorBracket)
+  |> translate(y = 17mm, z = -47mm, global = true)
+gpsPlaced = gpsModule
+  |> translate(y = 14mm, z = -47mm, global = true)
+loraBracket = clone(mediumSensorBracket)
+  |> translate(y = 17mm, z = -68mm, global = true)
+loraPlaced = loraModule
+  |> translate(y = 14mm, z = -68mm, global = true)
+bmeBracket = clone(smallSensorBracket)
+  |> translate(
+       x = -35mm,
+       y = 17mm,
+       z = 68mm,
+       global = true,
+     )
+bmePlaced = bme280Module
+  |> translate(
+       x = -35mm,
+       y = 14mm,
+       z = 68mm,
+       global = true,
+     )
+mpuBracket = clone(mediumSensorBracket)
+  |> translate(
+       x = 31mm,
+       y = 17mm,
+       z = 67mm,
+       global = true,
+     )
+mpuPlaced = mpu6050Module
+  |> translate(
+       x = 31mm,
+       y = 14mm,
+       z = 67mm,
+       global = true,
+     )
+maxBracket = clone(smallSensorBracket)
+  |> translate(
+       x = -35mm,
+       y = 17mm,
+       z = -38mm,
+       global = true,
+     )
+maxPlaced = max30102Module
+  |> translate(
+       x = -35mm,
+       y = 14mm,
+       z = -38mm,
+       global = true,
+     )
+ambientBracket = smallSensorBracket
+  |> translate(
+       x = 35mm,
+       y = 17mm,
+       z = -38mm,
+       global = true,
+     )
+ambientPlaced = ambientLightModule
+  |> translate(
+       x = 35mm,
+       y = 14mm,
+       z = -38mm,
+       global = true,
+     )
+
+upperCableClip = clone(cableClip)
+  |> translate(
+       x = 0mm,
+       y = 15mm,
+       z = -26mm,
+       global = true,
+     )
+lowerCableClip = cableClip
+  |> translate(
+       x = 0mm,
+       y = 15mm,
+       z = -58mm,
+       global = true,
+     )
+usbCPlaced = usbCAssembly
+  |> translate(y = 12mm, z = -81.5mm, global = true)
+
+rightVentPlaced = clone(sideVentPanel)
+  |> translate(
+       x = 47.6mm,
+       y = 11mm,
+       z = -20mm,
+       global = true,
+     )
+leftVentPlaced = sideVentPanel
+  |> rotate(axis = Z, angle = 180deg, global = true)
+  |> translate(
+       x = -47.6mm,
+       y = 11mm,
+       z = -20mm,
+       global = true,
+     )
+rearGripPlaced = rearGrip
+  |> translate(y = 23.3mm, global = true)
+
+frontTopLeftBumper = clone(cornerBumper)
+  |> translate(
+       x = -42mm,
+       y = -24.5mm,
+       z = 74mm,
+       global = true,
+     )
+frontTopRightBumper = clone(cornerBumper)
+  |> translate(
+       x = 42mm,
+       y = -24.5mm,
+       z = 74mm,
+       global = true,
+     )
+frontBottomLeftBumper = clone(cornerBumper)
+  |> translate(
+       x = -42mm,
+       y = -24.5mm,
+       z = -74mm,
+       global = true,
+     )
+frontBottomRightBumper = clone(cornerBumper)
+  |> translate(
+       x = 42mm,
+       y = -24.5mm,
+       z = -74mm,
+       global = true,
+     )
+rearTopLeftBumper = clone(cornerBumper)
+  |> translate(
+       x = -42mm,
+       y = 23.5mm,
+       z = 74mm,
+       global = true,
+     )
+rearTopRightBumper = clone(cornerBumper)
+  |> translate(
+       x = 42mm,
+       y = 23.5mm,
+       z = 74mm,
+       global = true,
+     )
+rearBottomLeftBumper = clone(cornerBumper)
+  |> translate(
+       x = -42mm,
+       y = 23.5mm,
+       z = -74mm,
+       global = true,
+     )
+rearBottomRightBumper = cornerBumper
+  |> translate(
+       x = 42mm,
+       y = 23.5mm,
+       z = -74mm,
+       global = true,
+     )
+
+screwTopLeft = clone(m3MachineScrew)
+  |> translate(
+       x = -shellFastenerX,
+       y = 21.5mm,
+       z = shellFastenerZ,
+       global = true,
+     )
+screwTopRight = clone(m3MachineScrew)
+  |> translate(
+       x = shellFastenerX,
+       y = 21.5mm,
+       z = shellFastenerZ,
+       global = true,
+     )
+screwBottomLeft = clone(m3MachineScrew)
+  |> translate(
+       x = -shellFastenerX,
+       y = 21.5mm,
+       z = -shellFastenerZ,
+       global = true,
+     )
+screwBottomRight = m3MachineScrew
+  |> translate(
+       x = shellFastenerX,
+       y = 21.5mm,
+       z = -shellFastenerZ,
+       global = true,
+     )
+insertTopLeft = clone(m3HeatSetInsert)
+  |> translate(
+       x = -shellFastenerX,
+       y = -5mm,
+       z = shellFastenerZ,
+       global = true,
+     )
+insertTopRight = clone(m3HeatSetInsert)
+  |> translate(
+       x = shellFastenerX,
+       y = -5mm,
+       z = shellFastenerZ,
+       global = true,
+     )
+insertBottomLeft = clone(m3HeatSetInsert)
+  |> translate(
+       x = -shellFastenerX,
+       y = -5mm,
+       z = -shellFastenerZ,
+       global = true,
+     )
+insertBottomRight = m3HeatSetInsert
+  |> translate(
+       x = shellFastenerX,
+       y = -5mm,
+       z = -shellFastenerZ,
+       global = true,
+     )
+
+export ruggedTerminalCore = flatten([
+  frontShellPlaced,
+  rearShellPlaced,
+  gasketPlaced,
+  displayPlaced,
+  cameraPlaced,
+  powerButton,
+  menuButton,
+  upButton,
+  downButton,
+  backButton,
+  emergencyButton,
+  chargingLightPipe,
+  powerLightPipe,
+  gpsLightPipe,
+  speakerPlaced,
+  microphonePlaced,
+  buzzerPlaced,
+  batteryCradlePlaced,
+  powerBankPlaced,
+  raspberryPiPlaced,
+  gpsBracket,
+  gpsPlaced,
+  loraBracket,
+  loraPlaced,
+  bmeBracket,
+  bmePlaced,
+  mpuBracket,
+  mpuPlaced,
+  maxBracket,
+  maxPlaced,
+  ambientBracket,
+  ambientPlaced,
+  upperCableClip,
+  lowerCableClip,
+  usbCPlaced,
+  rightVentPlaced,
+  leftVentPlaced,
+  rearGripPlaced,
+  frontTopLeftBumper,
+  frontTopRightBumper,
+  frontBottomLeftBumper,
+  frontBottomRightBumper,
+  rearTopLeftBumper,
+  rearTopRightBumper,
+  rearBottomLeftBumper,
+  rearBottomRightBumper,
+  screwTopLeft,
+  screwTopRight,
+  screwBottomLeft,
+  screwBottomRight,
+  insertTopLeft,
+  insertTopRight,
+  insertBottomLeft,
+  insertBottomRight
+])
+
+ruggedTerminalCore

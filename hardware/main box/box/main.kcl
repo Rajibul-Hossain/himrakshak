@@ -1,0 +1,10 @@
+// Rugged emergency field terminal
+// Canonically oriented assembly with the display and controls on the front view.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import ruggedTerminalCore from "assembly.kcl"
+
+ruggedTerminalAssembly = ruggedTerminalCore
+  |> rotate(axis = Z, angle = 180deg, global = true)
+
+ruggedTerminalAssembly

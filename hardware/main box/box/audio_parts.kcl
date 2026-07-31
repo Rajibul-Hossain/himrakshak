@@ -1,0 +1,90 @@
+// Audio and alert parts
+// Speaker, waterproof-style microphone capsule, and buzzer envelopes.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitCylY from "unit_cyl_y.kcl"
+import unitBox from "unit_box.kcl"
+
+speakerFrame = clone(unitCylY)
+  |> scale(
+       x = 28,
+       y = 6,
+       z = 28,
+       global = true,
+     )
+  |> appearance(color = graphite, roughness = 48, metalness = 24)
+speakerCone = clone(unitCylY)
+  |> scale(
+       x = 22,
+       y = 1.6,
+       z = 22,
+       global = true,
+     )
+  |> translate(y = -3.4mm, global = true)
+  |> appearance(color = tacticalBlack, roughness = 62, metalness = 8)
+speakerMagnet = clone(unitCylY)
+  |> scale(
+       x = 18,
+       y = 6,
+       z = 18,
+       global = true,
+     )
+  |> translate(y = 5mm, global = true)
+  |> appearance(color = "#596063", roughness = 36, metalness = 64)
+speakerTerminal = clone(unitBox)
+  |> scale(
+       x = 8,
+       y = 4,
+       z = 4,
+       global = true,
+     )
+  |> translate(x = 12mm, y = 3mm, global = true)
+  |> appearance(color = brass, roughness = 30, metalness = 66)
+export speakerModule = flatten([
+  speakerFrame,
+  speakerCone,
+  speakerMagnet,
+  speakerTerminal
+])
+
+microphoneBody = clone(unitCylY)
+  |> scale(
+       x = 6,
+       y = 5,
+       z = 6,
+       global = true,
+     )
+  |> appearance(color = graphite, roughness = 42, metalness = 40)
+microphoneMembrane = clone(unitCylY)
+  |> scale(
+       x = 3,
+       y = 0.6,
+       z = 3,
+       global = true,
+     )
+  |> translate(y = -2.8mm, global = true)
+  |> appearance(color = tacticalBlack, roughness = 64, metalness = 4)
+export microphoneModule = flatten([microphoneBody, microphoneMembrane])
+
+buzzerBody = clone(unitCylY)
+  |> scale(
+       x = 16,
+       y = 8,
+       z = 16,
+       global = true,
+     )
+  |> appearance(color = tacticalBlack, roughness = 56, metalness = 12)
+buzzerCap = clone(unitCylY)
+  |> scale(
+       x = 12,
+       y = 1,
+       z = 12,
+       global = true,
+     )
+  |> translate(y = -4.5mm, global = true)
+  |> appearance(color = graphite, roughness = 42, metalness = 24)
+export buzzerModule = flatten([buzzerBody, buzzerCap])
+
+hide(unitCylY)
+hide(unitBox)

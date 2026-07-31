@@ -1,0 +1,37 @@
+// Unit box primitive
+// Origin-centered scalable rectangular solid.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+unitBoxSketch = sketch(on = XY) {
+  centerPoint = point(at = [var 0mm, var 0mm])
+  lower = line(start = [var -0.5mm, var -0.5mm], end = [var 0.5mm, var -0.5mm])
+  right = line(start = [var 0.5mm, var -0.5mm], end = [var 0.5mm, var 0.5mm])
+  upper = line(start = [var 0.5mm, var 0.5mm], end = [var -0.5mm, var 0.5mm])
+  left = line(start = [var -0.5mm, var 0.5mm], end = [var -0.5mm, var -0.5mm])
+  coincident([lower.end, right.start])
+  coincident([right.end, upper.start])
+  coincident([upper.end, left.start])
+  coincident([left.end, lower.start])
+  coincident([centerPoint, ORIGIN])
+  horizontal(lower)
+  vertical(right)
+  horizontal(upper)
+  vertical(left)
+  horizontalDistance([centerPoint, lower.start]) == -0.5mm
+  verticalDistance([centerPoint, lower.start]) == -0.5mm
+  horizontalDistance([centerPoint, right.end]) == 0.5mm
+  verticalDistance([centerPoint, right.end]) == 0.5mm
+}
+
+unitBoxRegion = region(
+  segments = [
+    unitBoxSketch.lower,
+    unitBoxSketch.right
+  ],
+  intersectionIndex = -1,
+  direction = CCW,
+)
+unitBoxBody = extrude(unitBoxRegion, length = 1mm, symmetric = true)
+hide(unitBoxSketch)
+
+export unitBox = unitBoxBody

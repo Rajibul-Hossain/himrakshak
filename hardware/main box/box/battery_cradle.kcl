@@ -1,0 +1,137 @@
+// Power-bank retaining cradle
+// Open printable cage with widened rails, retaining clips, strap loops, and cable exit gap.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+
+rearLeftRail = clone(unitBox)
+  |> scale(
+       x = 4,
+       y = 3,
+       z = 150,
+       global = true,
+     )
+  |> translate(x = -39mm, y = 11.5mm, global = true)
+rearRightRail = clone(rearLeftRail)
+  |> translate(x = 78mm, global = true)
+rearTopCross = clone(unitBox)
+  |> scale(
+       x = 76,
+       y = 3,
+       z = 4,
+       global = true,
+     )
+  |> translate(y = 11.5mm, z = 73mm, global = true)
+rearBottomLeft = clone(unitBox)
+  |> scale(
+       x = 30,
+       y = 3,
+       z = 4,
+       global = true,
+     )
+  |> translate(
+       x = -23mm,
+       y = 11.5mm,
+       z = -73mm,
+       global = true,
+     )
+rearBottomRight = clone(rearBottomLeft)
+  |> translate(x = 46mm, global = true)
+
+leftTopDepthTie = clone(unitBox)
+  |> scale(
+       x = 4,
+       y = 23,
+       z = 5,
+       global = true,
+     )
+  |> translate(x = -39mm, z = 71mm, global = true)
+rightTopDepthTie = clone(leftTopDepthTie)
+  |> translate(x = 78mm, global = true)
+leftBottomDepthTie = clone(leftTopDepthTie)
+  |> translate(z = -142mm, global = true)
+rightBottomDepthTie = clone(rightTopDepthTie)
+  |> translate(z = -142mm, global = true)
+
+frontClipLeftUpper = clone(unitBox)
+  |> scale(
+       x = 4,
+       y = 3,
+       z = 24,
+       global = true,
+     )
+  |> translate(
+       x = -39mm,
+       y = -11.5mm,
+       z = 58mm,
+       global = true,
+     )
+frontClipRightUpper = clone(frontClipLeftUpper)
+  |> translate(x = 78mm, global = true)
+frontClipLeftLower = clone(frontClipLeftUpper)
+  |> translate(z = -116mm, global = true)
+frontClipRightLower = clone(frontClipRightUpper)
+  |> translate(z = -116mm, global = true)
+frontHookTopLeft = clone(unitBox)
+  |> scale(
+       x = 7,
+       y = 4,
+       z = 4,
+       global = true,
+     )
+  |> translate(
+       x = -36.5mm,
+       y = -12mm,
+       z = 69mm,
+       global = true,
+     )
+frontHookTopRight = clone(frontHookTopLeft)
+  |> translate(x = 73mm, global = true)
+frontHookBottomLeft = clone(frontHookTopLeft)
+  |> translate(z = -138mm, global = true)
+frontHookBottomRight = clone(frontHookTopRight)
+  |> translate(z = -138mm, global = true)
+
+strapBridgeLeftUpper = clone(unitBox)
+  |> scale(
+       x = 4,
+       y = 23,
+       z = 4,
+       global = true,
+     )
+  |> translate(x = -39mm, z = 26mm, global = true)
+strapBridgeRightUpper = clone(strapBridgeLeftUpper)
+  |> translate(x = 78mm, global = true)
+strapBridgeLeftLower = clone(strapBridgeLeftUpper)
+  |> translate(z = -52mm, global = true)
+strapBridgeRightLower = clone(strapBridgeRightUpper)
+  |> translate(z = -52mm, global = true)
+
+export batteryCradle = flatten([
+  rearLeftRail,
+  rearRightRail,
+  rearTopCross,
+  rearBottomLeft,
+  rearBottomRight,
+  leftTopDepthTie,
+  rightTopDepthTie,
+  leftBottomDepthTie,
+  rightBottomDepthTie,
+  frontClipLeftUpper,
+  frontClipRightUpper,
+  frontClipLeftLower,
+  frontClipRightLower,
+  frontHookTopLeft,
+  frontHookTopRight,
+  frontHookBottomLeft,
+  frontHookBottomRight,
+  strapBridgeLeftUpper,
+  strapBridgeRightUpper,
+  strapBridgeLeftLower,
+  strapBridgeRightLower
+])
+  |> appearance(color = deepOlive, roughness = 84, metalness = 0)
+
+hide(unitBox)
+batteryCradle

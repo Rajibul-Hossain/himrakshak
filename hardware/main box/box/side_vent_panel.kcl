@@ -1,0 +1,44 @@
+// Side vent insert
+// Hidden-mesh backing with five explicit radio-style protective louvers.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+
+ventMeshBacking = clone(unitBox)
+  |> scale(
+       x = 1.2,
+       y = 30,
+       z = 40,
+       global = true,
+     )
+  |> appearance(color = tacticalBlack, roughness = 82, metalness = 12)
+ventLouver1 = clone(unitBox)
+  |> scale(
+       x = 2,
+       y = 24,
+       z = 3.2,
+       global = true,
+     )
+  |> translate(x = 1mm, z = -14mm, global = true)
+  |> appearance(color = rubberBlack, roughness = 92, metalness = 0)
+ventLouver2 = clone(ventLouver1)
+  |> translate(z = 7mm, global = true)
+ventLouver3 = clone(ventLouver1)
+  |> translate(z = 14mm, global = true)
+ventLouver4 = clone(ventLouver1)
+  |> translate(z = 21mm, global = true)
+ventLouver5 = clone(ventLouver1)
+  |> translate(z = 28mm, global = true)
+
+export sideVentPanel = flatten([
+  ventMeshBacking,
+  ventLouver1,
+  ventLouver2,
+  ventLouver3,
+  ventLouver4,
+  ventLouver5
+])
+
+hide(unitBox)
+sideVentPanel

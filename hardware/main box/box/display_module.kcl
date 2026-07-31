@@ -1,0 +1,77 @@
+// 3.5 inch display module
+// Recessed LCD mockup with visible area, PCB flange, and four mounting holes.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+import unitCylY from "unit_cyl_y.kcl"
+
+displayBoardBlank = clone(unitBox)
+  |> scale(
+       x = 80,
+       y = 1.6,
+       z = 56,
+       global = true,
+     )
+displayHoleTopLeft = clone(unitCylY)
+  |> scale(
+       x = 2.7,
+       y = 4,
+       z = 2.7,
+       global = true,
+     )
+  |> translate(x = -38mm, z = 26mm, global = true)
+displayHoleTopRight = clone(displayHoleTopLeft)
+  |> translate(x = 76mm, global = true)
+displayHoleBottomLeft = clone(displayHoleTopLeft)
+  |> translate(z = -52mm, global = true)
+displayHoleBottomRight = clone(displayHoleTopRight)
+  |> translate(z = -52mm, global = true)
+displayBoardCut1 = subtract([displayBoardBlank], tools = [displayHoleTopLeft])
+displayBoardCut2 = subtract([displayBoardCut1], tools = [displayHoleTopRight])
+displayBoardCut3 = subtract([displayBoardCut2], tools = [displayHoleBottomLeft])
+displayBoard = subtract([displayBoardCut3], tools = [displayHoleBottomRight])
+  |> appearance(color = pcbGreen, roughness = 58, metalness = 0)
+displayBacking = clone(unitBox)
+  |> scale(
+       x = 77,
+       y = 1.2,
+       z = 53,
+       global = true,
+     )
+  |> translate(y = -1.3mm, global = true)
+  |> appearance(color = tacticalBlack, roughness = 38, metalness = 10)
+displayGlass = clone(unitBox)
+  |> scale(
+       x = displayVisibleWidth / 1mm,
+       y = 0.8,
+       z = displayVisibleHeight / 1mm,
+       global = true,
+     )
+  |> translate(y = -2.2mm, global = true)
+  |> appearance(
+       color = displayBlue,
+       roughness = 12,
+       metalness = 8,
+       opacity = 88,
+     )
+displayRibbonSocket = clone(unitBox)
+  |> scale(
+       x = 24,
+       y = 4,
+       z = 5,
+       global = true,
+     )
+  |> translate(y = 2mm, z = -23mm, global = true)
+  |> appearance(color = graphite, roughness = 42, metalness = 18)
+
+export displayModule = flatten([
+  displayBoard,
+  displayBacking,
+  displayGlass,
+  displayRibbonSocket
+])
+
+hide(unitBox)
+hide(unitCylY)
+displayModule

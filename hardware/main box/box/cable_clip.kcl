@@ -1,0 +1,48 @@
+// Cable routing clip
+// Open U-clip sized for small harness bundles and ribbon retention.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+
+clipBase = clone(unitBox)
+  |> scale(
+       x = 12,
+       y = 3,
+       z = 2.5,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 84, metalness = 0)
+clipLeftWall = clone(unitBox)
+  |> scale(
+       x = 2.5,
+       y = 3,
+       z = 8,
+       global = true,
+     )
+  |> translate(x = -4.75mm, z = 3mm, global = true)
+  |> appearance(color = deepOlive, roughness = 84, metalness = 0)
+clipRightWall = clone(clipLeftWall)
+  |> translate(x = 9.5mm, global = true)
+clipRetentionLipLeft = clone(unitBox)
+  |> scale(
+       x = 4,
+       y = 3,
+       z = 2,
+       global = true,
+     )
+  |> translate(x = -3.8mm, z = 6.5mm, global = true)
+  |> appearance(color = deepOlive, roughness = 84, metalness = 0)
+clipRetentionLipRight = clone(clipRetentionLipLeft)
+  |> translate(x = 7.6mm, global = true)
+
+export cableClip = flatten([
+  clipBase,
+  clipLeftWall,
+  clipRightWall,
+  clipRetentionLipLeft,
+  clipRetentionLipRight
+])
+
+hide(unitBox)
+cableClip

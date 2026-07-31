@@ -1,0 +1,58 @@
+// Chamfered corner bumper
+// Printable black corner guard used as eight repeated front/rear pads.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+
+bumperWidth = 14mm
+bumperHeight = 20mm
+bumperChamfer = 3mm
+bumperDepth = 6mm
+
+bumperProfile = sketch(on = XZ) {
+  bottom = line(start = [var -4mm, var -10mm], end = [var 4mm, var -10mm])
+  bottomRight = line(start = [var 4mm, var -10mm], end = [var 7mm, var -7mm])
+  right = line(start = [var 7mm, var -7mm], end = [var 7mm, var 7mm])
+  topRight = line(start = [var 7mm, var 7mm], end = [var 4mm, var 10mm])
+  top = line(start = [var 4mm, var 10mm], end = [var -4mm, var 10mm])
+  topLeft = line(start = [var -4mm, var 10mm], end = [var -7mm, var 7mm])
+  left = line(start = [var -7mm, var 7mm], end = [var -7mm, var -7mm])
+  bottomLeft = line(start = [var -7mm, var -7mm], end = [var -4mm, var -10mm])
+  coincident([bottom.end, bottomRight.start])
+  coincident([bottomRight.end, right.start])
+  coincident([right.end, topRight.start])
+  coincident([topRight.end, top.start])
+  coincident([top.end, topLeft.start])
+  coincident([topLeft.end, left.start])
+  coincident([left.end, bottomLeft.start])
+  coincident([bottomLeft.end, bottom.start])
+  horizontal(bottom)
+  vertical(right)
+  horizontal(top)
+  vertical(left)
+  horizontalDistance([bottom.start, bottom.end]) == bumperWidth - (2 * bumperChamfer)
+  verticalDistance([right.start, right.end]) == bumperHeight - (2 * bumperChamfer)
+  horizontalDistance([bottomRight.start, bottomRight.end]) == bumperChamfer
+  verticalDistance([bottomRight.start, bottomRight.end]) == bumperChamfer
+  horizontalDistance([topRight.end, topRight.start]) == bumperChamfer
+  verticalDistance([topRight.start, topRight.end]) == bumperChamfer
+  horizontalDistance([topLeft.end, topLeft.start]) == bumperChamfer
+  verticalDistance([topLeft.end, topLeft.start]) == bumperChamfer
+  horizontalDistance([bottomLeft.start, bottomLeft.end]) == bumperChamfer
+  verticalDistance([bottomLeft.end, bottomLeft.start]) == bumperChamfer
+  horizontalDistance([ORIGIN, right.start]) == bumperWidth / 2
+  verticalDistance([ORIGIN, top.start]) == bumperHeight / 2
+}
+bumperRegion = region(
+  segments = [
+    bumperProfile.bottom,
+    bumperProfile.bottomRight
+  ],
+  intersectionIndex = -1,
+  direction = CCW,
+)
+export cornerBumper = extrude(bumperRegion, length = bumperDepth, symmetric = true)
+  |> appearance(color = rubberBlack, roughness = 94, metalness = 0)
+
+hide(bumperProfile)
+cornerBumper

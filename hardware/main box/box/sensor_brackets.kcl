@@ -1,0 +1,103 @@
+// Sensor mounting brackets
+// Small, medium, and large ventilated boss plates for modular sensor placement.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+import unitCylY from "unit_cyl_y.kcl"
+
+bossOuter = clone(unitCylY)
+  |> scale(
+       x = 4.5,
+       y = 4,
+       z = 4.5,
+       global = true,
+     )
+bossBore = clone(unitCylY)
+  |> scale(
+       x = 2.2,
+       y = 5,
+       z = 2.2,
+       global = true,
+     )
+bossRing = subtract([bossOuter], tools = [bossBore])
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+
+smallPlate = clone(unitBox)
+  |> scale(
+       x = 18,
+       y = 2.5,
+       z = 16,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+smallBossLeft = clone(bossRing)
+  |> translate(x = -6mm, y = -2.8mm, global = true)
+smallBossRight = clone(bossRing)
+  |> translate(x = 6mm, y = -2.8mm, global = true)
+export smallSensorBracket = flatten([
+  smallPlate,
+  smallBossLeft,
+  smallBossRight
+])
+
+mediumPlate = clone(unitBox)
+  |> scale(
+       x = 24,
+       y = 2.5,
+       z = 20,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+mediumBossTopLeft = clone(bossRing)
+  |> translate(
+       x = -8mm,
+       y = -2.8mm,
+       z = 6mm,
+       global = true,
+     )
+mediumBossTopRight = clone(mediumBossTopLeft)
+  |> translate(x = 16mm, global = true)
+mediumBossBottomLeft = clone(mediumBossTopLeft)
+  |> translate(z = -12mm, global = true)
+mediumBossBottomRight = clone(mediumBossTopRight)
+  |> translate(z = -12mm, global = true)
+export mediumSensorBracket = flatten([
+  mediumPlate,
+  mediumBossTopLeft,
+  mediumBossTopRight,
+  mediumBossBottomLeft,
+  mediumBossBottomRight
+])
+
+largePlate = clone(unitBox)
+  |> scale(
+       x = 30,
+       y = 2.5,
+       z = 30,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+largeBossTopLeft = clone(bossRing)
+  |> translate(
+       x = -10mm,
+       y = -2.8mm,
+       z = 10mm,
+       global = true,
+     )
+largeBossTopRight = clone(largeBossTopLeft)
+  |> translate(x = 20mm, global = true)
+largeBossBottomLeft = clone(largeBossTopLeft)
+  |> translate(z = -20mm, global = true)
+largeBossBottomRight = clone(largeBossTopRight)
+  |> translate(z = -20mm, global = true)
+export largeSensorBracket = flatten([
+  largePlate,
+  largeBossTopLeft,
+  largeBossTopRight,
+  largeBossBottomLeft,
+  largeBossBottomRight
+])
+
+hide(unitBox)
+hide(unitCylY)

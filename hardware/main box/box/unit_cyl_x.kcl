@@ -1,0 +1,18 @@
+// Unit X-axis cylinder primitive
+// Origin-centered scalable cylinder for side details.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+unitCylXSketch = sketch(on = YZ) {
+  centerPoint = point(at = [var 0mm, var 0mm])
+  outerCircle = circle(start = [var 0.5mm, var 0mm], center = [var 0mm, var 0mm])
+  coincident([centerPoint, ORIGIN])
+  coincident([outerCircle.center, centerPoint])
+  horizontal([outerCircle.center, outerCircle.start])
+  diameter(outerCircle) == 1mm
+}
+
+unitCylXRegion = region(segments = [unitCylXSketch.outerCircle])
+unitCylXBody = extrude(unitCylXRegion, length = 1mm, symmetric = true)
+hide(unitCylXSketch)
+
+export unitCylX = unitCylXBody

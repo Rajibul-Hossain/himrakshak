@@ -1,0 +1,85 @@
+// Bottom USB-C charging assembly
+// Recessed connector support, strain relief, removable cap, and tether feature.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+import unitCylZ from "unit_cyl_z.kcl"
+
+usbCMetalShell = clone(unitBox)
+  |> scale(
+       x = 12,
+       y = 8,
+       z = 6,
+       global = true,
+     )
+  |> appearance(color = hardwareSteel, roughness = 28, metalness = 80)
+usbCInner = clone(unitBox)
+  |> scale(
+       x = 8,
+       y = 5,
+       z = 2.5,
+       global = true,
+     )
+  |> translate(z = -3.2mm, global = true)
+  |> appearance(color = tacticalBlack, roughness = 48, metalness = 8)
+usbCInternalSupport = clone(unitBox)
+  |> scale(
+       x = 22,
+       y = 14,
+       z = 3,
+       global = true,
+     )
+  |> translate(z = 4.5mm, global = true)
+  |> appearance(color = deepOlive, roughness = 82, metalness = 0)
+usbCStrainRelief = clone(unitBox)
+  |> scale(
+       x = 18,
+       y = 10,
+       z = 5,
+       global = true,
+     )
+  |> translate(z = 8mm, global = true)
+  |> appearance(color = rubberBlack, roughness = 92, metalness = 0)
+usbCCap = clone(unitBox)
+  |> scale(
+       x = 18,
+       y = 14,
+       z = 3,
+       global = true,
+     )
+  |> translate(x = 21mm, z = -3mm, global = true)
+  |> appearance(color = rubberBlack, roughness = 94, metalness = 0)
+usbCCapTether = clone(unitBox)
+  |> scale(
+       x = 18,
+       y = 3,
+       z = 2.4,
+       global = true,
+     )
+  |> rotate(axis = Y, angle = -18deg, global = true)
+  |> translate(x = 11mm, z = -1mm, global = true)
+  |> appearance(color = rubberBlack, roughness = 94, metalness = 0)
+usbCCapEye = clone(unitCylZ)
+  |> scale(
+       x = 5,
+       y = 5,
+       z = 3,
+       global = true,
+     )
+  |> translate(x = 12mm, global = true)
+  |> appearance(color = rubberBlack, roughness = 94, metalness = 0)
+
+export usbCAssembly = flatten([
+  usbCMetalShell,
+  usbCInner,
+  usbCInternalSupport,
+  usbCStrainRelief,
+  usbCCap,
+  usbCCapTether,
+  usbCCapEye
+])
+
+hide(unitBox)
+hide(unitCylZ)
+usbCAssembly

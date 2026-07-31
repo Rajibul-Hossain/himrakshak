@@ -1,0 +1,159 @@
+// Exploded internal review assembly
+// Shells separated only for inspection while electronics remain on assembled datums.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import frontShellAssembly from "front_shell.kcl"
+import rearShellAssembly from "rear_shell.kcl"
+import displayModule from "display_module.kcl"
+import cameraModule from "camera_module.kcl"
+import raspberryPi4 from "raspberry_pi_4.kcl"
+import powerBank from "power_bank.kcl"
+import batteryCradle from "battery_cradle.kcl"
+import gpsModule from "sensor_modules.kcl"
+import bme280Module from "sensor_modules.kcl"
+import mpu6050Module from "sensor_modules.kcl"
+import max30102Module from "sensor_modules.kcl"
+import loraModule from "sensor_modules.kcl"
+import ambientLightModule from "sensor_modules.kcl"
+import speakerModule from "audio_parts.kcl"
+import microphoneModule from "audio_parts.kcl"
+import buzzerModule from "audio_parts.kcl"
+import smallSensorBracket from "sensor_brackets.kcl"
+import mediumSensorBracket from "sensor_brackets.kcl"
+import largeSensorBracket from "sensor_brackets.kcl"
+import cableClip from "cable_clip.kcl"
+import perimeterGasket from "gasket.kcl"
+import * from "parameters.kcl"
+
+frontShellExploded = frontShellAssembly
+  |> translate(y = -52mm, global = true)
+rearShellExploded = rearShellAssembly
+  |> translate(y = 52mm, global = true)
+gasketDatum = perimeterGasket
+
+displayExploded = displayModule
+  |> translate(y = -30mm, z = displayCenterZ, global = true)
+cameraExploded = cameraModule
+  |> translate(y = -22mm, z = cameraCenterZ, global = true)
+speakerExploded = speakerModule
+  |> translate(
+       x = -25mm,
+       y = -24mm,
+       z = -58mm,
+       global = true,
+     )
+microphoneExploded = microphoneModule
+  |> translate(
+       x = -5mm,
+       y = -24mm,
+       z = -55mm,
+       global = true,
+     )
+
+batteryCradleDatum = batteryCradle
+  |> translate(y = powerBankCenterY, z = powerBankCenterZ, global = true)
+powerBankDatum = powerBank
+  |> translate(y = powerBankCenterY, z = powerBankCenterZ, global = true)
+raspberryPiDatum = raspberryPi4
+  |> translate(y = piBoardCenterY, z = piBoardCenterZ, global = true)
+buzzerDatum = buzzerModule
+  |> translate(y = 14.5mm, z = 70mm, global = true)
+
+gpsBracketDatum = clone(largeSensorBracket)
+  |> translate(y = 17mm, z = -47mm, global = true)
+gpsDatum = gpsModule
+  |> translate(y = 14mm, z = -47mm, global = true)
+loraBracketDatum = clone(mediumSensorBracket)
+  |> translate(y = 17mm, z = -68mm, global = true)
+loraDatum = loraModule
+  |> translate(y = 14mm, z = -68mm, global = true)
+bmeBracketDatum = clone(smallSensorBracket)
+  |> translate(
+       x = -35mm,
+       y = 17mm,
+       z = 68mm,
+       global = true,
+     )
+bmeDatum = bme280Module
+  |> translate(
+       x = -35mm,
+       y = 14mm,
+       z = 68mm,
+       global = true,
+     )
+mpuBracketDatum = clone(mediumSensorBracket)
+  |> translate(
+       x = 31mm,
+       y = 17mm,
+       z = 67mm,
+       global = true,
+     )
+mpuDatum = mpu6050Module
+  |> translate(
+       x = 31mm,
+       y = 14mm,
+       z = 67mm,
+       global = true,
+     )
+maxBracketDatum = clone(smallSensorBracket)
+  |> translate(
+       x = -35mm,
+       y = 17mm,
+       z = -38mm,
+       global = true,
+     )
+maxDatum = max30102Module
+  |> translate(
+       x = -35mm,
+       y = 14mm,
+       z = -38mm,
+       global = true,
+     )
+ambientBracketDatum = smallSensorBracket
+  |> translate(
+       x = 35mm,
+       y = 17mm,
+       z = -38mm,
+       global = true,
+     )
+ambientDatum = ambientLightModule
+  |> translate(
+       x = 35mm,
+       y = 14mm,
+       z = -38mm,
+       global = true,
+     )
+upperCableClipDatum = clone(cableClip)
+  |> translate(y = 15mm, z = -26mm, global = true)
+lowerCableClipDatum = cableClip
+  |> translate(y = 15mm, z = -58mm, global = true)
+
+explodedReviewAssembly = flatten([
+  frontShellExploded,
+  rearShellExploded,
+  gasketDatum,
+  displayExploded,
+  cameraExploded,
+  speakerExploded,
+  microphoneExploded,
+  batteryCradleDatum,
+  powerBankDatum,
+  raspberryPiDatum,
+  buzzerDatum,
+  gpsBracketDatum,
+  gpsDatum,
+  loraBracketDatum,
+  loraDatum,
+  bmeBracketDatum,
+  bmeDatum,
+  mpuBracketDatum,
+  mpuDatum,
+  maxBracketDatum,
+  maxDatum,
+  ambientBracketDatum,
+  ambientDatum,
+  upperCableClipDatum,
+  lowerCableClipDatum
+])
+
+explodedReviewAssembly

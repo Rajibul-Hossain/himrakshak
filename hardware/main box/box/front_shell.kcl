@@ -1,0 +1,549 @@
+// Rugged terminal front shell module
+// Structural skin plus co-located printable bosses and guides after engine-safe boolean staging.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+import unitCylY from "unit_cyl_y.kcl"
+
+frontOuterProfile = sketch(on = XZ) {
+  top = line(start = [var 40.5mm, var 84mm], end = [var -40.5mm, var 84mm])
+  topLeft = arc(start = [var -40.5mm, var 84mm], end = [var -47.5mm, var 77mm], center = [var -40.5mm, var 77mm])
+  left = line(start = [var -47.5mm, var 77mm], end = [var -47.5mm, var -77mm])
+  bottomLeft = arc(start = [var -47.5mm, var -77mm], end = [var -40.5mm, var -84mm], center = [var -40.5mm, var -77mm])
+  bottom = line(start = [var -40.5mm, var -84mm], end = [var 40.5mm, var -84mm])
+  bottomRight = arc(start = [var 40.5mm, var -84mm], end = [var 47.5mm, var -77mm], center = [var 40.5mm, var -77mm])
+  right = line(start = [var 47.5mm, var -77mm], end = [var 47.5mm, var 77mm])
+  topRight = arc(start = [var 47.5mm, var 77mm], end = [var 40.5mm, var 84mm], center = [var 40.5mm, var 77mm])
+  coincident([top.end, topLeft.start])
+  coincident([topLeft.end, left.start])
+  coincident([left.end, bottomLeft.start])
+  coincident([bottomLeft.end, bottom.start])
+  coincident([bottom.end, bottomRight.start])
+  coincident([bottomRight.end, right.start])
+  coincident([right.end, topRight.start])
+  coincident([topRight.end, top.start])
+  horizontal(top)
+  vertical(left)
+  horizontal(bottom)
+  vertical(right)
+  vertical([topLeft.center, topLeft.start])
+  horizontal([topLeft.center, topLeft.end])
+  horizontal([bottomLeft.center, bottomLeft.start])
+  vertical([bottomLeft.center, bottomLeft.end])
+  vertical([bottomRight.center, bottomRight.start])
+  horizontal([bottomRight.center, bottomRight.end])
+  horizontal([topRight.center, topRight.start])
+  vertical([topRight.center, topRight.end])
+  horizontal([topLeft.center, topRight.center])
+  horizontal([bottomLeft.center, bottomRight.center])
+  vertical([topLeft.center, bottomLeft.center])
+  vertical([topRight.center, bottomRight.center])
+  radius(topLeft) == outerCornerRadius
+  radius(bottomLeft) == outerCornerRadius
+  radius(bottomRight) == outerCornerRadius
+  radius(topRight) == outerCornerRadius
+  horizontalDistance([topLeft.center, topRight.center]) == enclosureWidth - (2 * outerCornerRadius)
+  verticalDistance([bottomRight.center, topRight.center]) == enclosureBodyHeight - (2 * outerCornerRadius)
+  horizontalDistance([ORIGIN, topRight.center]) == enclosureWidth / 2 - outerCornerRadius
+  verticalDistance([ORIGIN, topRight.center]) == enclosureBodyHeight / 2 - outerCornerRadius
+}
+frontOuterRegion = region(
+  segments = [
+    frontOuterProfile.top,
+    frontOuterProfile.topLeft
+  ],
+  intersectionIndex = -1,
+  direction = CCW,
+)
+frontOuterBody = extrude(frontOuterRegion, length = frontDepth)
+
+frontCavityPlane = {
+  origin = [0mm, 0.5mm, 0mm],
+  xAxis = [1, 0, 0],
+  yAxis = [0, 0, 1]
+}
+frontInnerProfile = sketch(on = frontCavityPlane) {
+  top = line(start = [var 40.5mm, var 81mm], end = [var -40.5mm, var 81mm])
+  topLeft = arc(start = [var -40.5mm, var 81mm], end = [var -44.5mm, var 77mm], center = [var -40.5mm, var 77mm])
+  left = line(start = [var -44.5mm, var 77mm], end = [var -44.5mm, var -77mm])
+  bottomLeft = arc(start = [var -44.5mm, var -77mm], end = [var -40.5mm, var -81mm], center = [var -40.5mm, var -77mm])
+  bottom = line(start = [var -40.5mm, var -81mm], end = [var 40.5mm, var -81mm])
+  bottomRight = arc(start = [var 40.5mm, var -81mm], end = [var 44.5mm, var -77mm], center = [var 40.5mm, var -77mm])
+  right = line(start = [var 44.5mm, var -77mm], end = [var 44.5mm, var 77mm])
+  topRight = arc(start = [var 44.5mm, var 77mm], end = [var 40.5mm, var 81mm], center = [var 40.5mm, var 77mm])
+  coincident([top.end, topLeft.start])
+  coincident([topLeft.end, left.start])
+  coincident([left.end, bottomLeft.start])
+  coincident([bottomLeft.end, bottom.start])
+  coincident([bottom.end, bottomRight.start])
+  coincident([bottomRight.end, right.start])
+  coincident([right.end, topRight.start])
+  coincident([topRight.end, top.start])
+  horizontal(top)
+  vertical(left)
+  horizontal(bottom)
+  vertical(right)
+  vertical([topLeft.center, topLeft.start])
+  horizontal([topLeft.center, topLeft.end])
+  horizontal([bottomLeft.center, bottomLeft.start])
+  vertical([bottomLeft.center, bottomLeft.end])
+  vertical([bottomRight.center, bottomRight.start])
+  horizontal([bottomRight.center, bottomRight.end])
+  horizontal([topRight.center, topRight.start])
+  vertical([topRight.center, topRight.end])
+  horizontal([topLeft.center, topRight.center])
+  horizontal([bottomLeft.center, bottomRight.center])
+  vertical([topLeft.center, bottomLeft.center])
+  vertical([topRight.center, bottomRight.center])
+  radius(topLeft) == innerCornerRadius
+  radius(bottomLeft) == innerCornerRadius
+  radius(bottomRight) == innerCornerRadius
+  radius(topRight) == innerCornerRadius
+  horizontalDistance([topLeft.center, topRight.center]) == enclosureWidth - (2 * wallThickness) - (2 * innerCornerRadius)
+  verticalDistance([bottomRight.center, topRight.center]) == enclosureBodyHeight - (2 * wallThickness) - (2 * innerCornerRadius)
+  horizontalDistance([ORIGIN, topRight.center]) == enclosureWidth / 2 - wallThickness - innerCornerRadius
+  verticalDistance([ORIGIN, topRight.center]) == enclosureBodyHeight / 2 - wallThickness - innerCornerRadius
+}
+frontInnerRegion = region(
+  segments = [
+    frontInnerProfile.top,
+    frontInnerProfile.topLeft
+  ],
+  intersectionIndex = -1,
+  direction = CCW,
+)
+frontCavityCutter = extrude(frontInnerRegion, length = frontDepth - wallThickness + csgOverlap)
+frontHollowBody = subtract([frontOuterBody], tools = [frontCavityCutter])
+
+displayThroughCutter = clone(unitBox)
+  |> scale(
+       x = displayVisibleWidth / 1mm,
+       y = 7,
+       z = displayVisibleHeight / 1mm,
+       global = true,
+     )
+  |> translate(y = -20.5mm, z = displayCenterZ, global = true)
+displayRecessCutter = clone(unitBox)
+  |> scale(
+       x = displayRecessWidth / 1mm,
+       y = 1.8,
+       z = displayRecessHeight / 1mm,
+       global = true,
+     )
+  |> translate(y = -22.5mm, z = displayCenterZ, global = true)
+cameraThroughCutter = clone(unitCylY)
+  |> scale(
+       x = cameraOpeningDiameter / 1mm,
+       y = 7,
+       z = cameraOpeningDiameter / 1mm,
+       global = true,
+     )
+  |> translate(y = -20.5mm, z = cameraCenterZ, global = true)
+smallButtonCutterSeed = clone(unitBox)
+  |> scale(
+       x = 7.4,
+       y = 7,
+       z = 7.4,
+       global = true,
+     )
+  |> translate(
+       x = -30mm,
+       y = -20.5mm,
+       z = -25mm,
+       global = true,
+     )
+smallButtonCutters = smallButtonCutterSeed
+  |> patternLinear3d(instances = 5, distance = 15mm, axis = X)
+emergencyButtonCutter = clone(unitCylY)
+  |> scale(
+       x = 17.5,
+       y = 7,
+       z = 17.5,
+       global = true,
+     )
+  |> translate(
+       x = 24mm,
+       y = -20.5mm,
+       z = -57mm,
+       global = true,
+     )
+ledCutterSeed = clone(unitCylY)
+  |> scale(
+       x = 2,
+       y = 7,
+       z = 2,
+       global = true,
+     )
+  |> translate(
+       x = 24mm,
+       y = -20.5mm,
+       z = -11mm,
+       global = true,
+     )
+ledCutters = ledCutterSeed
+  |> patternLinear3d(instances = 3, distance = 6mm, axis = X)
+microphoneCutter = clone(unitCylY)
+  |> scale(
+       x = 1.8,
+       y = 7,
+       z = 1.8,
+       global = true,
+     )
+  |> translate(
+       x = -5mm,
+       y = -20.5mm,
+       z = -55mm,
+       global = true,
+     )
+speakerCutterCenter = clone(unitCylY)
+  |> scale(
+       x = 3.2,
+       y = 7,
+       z = 3.2,
+       global = true,
+     )
+  |> translate(
+       x = -25mm,
+       y = -20.5mm,
+       z = -58mm,
+       global = true,
+     )
+speakerCutterLeft = clone(speakerCutterCenter)
+  |> translate(x = -4mm, global = true)
+speakerCutterRight = clone(speakerCutterCenter)
+  |> translate(x = 4mm, global = true)
+speakerCutterUpperLeft = clone(speakerCutterCenter)
+  |> translate(x = -2mm, z = 3.5mm, global = true)
+speakerCutterUpperRight = clone(speakerCutterCenter)
+  |> translate(x = 2mm, z = 3.5mm, global = true)
+speakerCutterLowerLeft = clone(speakerCutterCenter)
+  |> translate(x = -2mm, z = -3.5mm, global = true)
+speakerCutterLowerRight = clone(speakerCutterCenter)
+  |> translate(x = 2mm, z = -3.5mm, global = true)
+ribbonChannelCutter = clone(unitBox)
+  |> scale(
+       x = 5,
+       y = 1.4,
+       z = 36,
+       global = true,
+     )
+  |> translate(
+       x = 10mm,
+       y = -19.5mm,
+       z = -19mm,
+       global = true,
+     )
+harnessChannelCutter = clone(unitBox)
+  |> scale(
+       x = 44,
+       y = 1.4,
+       z = 4,
+       global = true,
+     )
+  |> translate(
+       x = 8mm,
+       y = -19.5mm,
+       z = -34mm,
+       global = true,
+     )
+
+frontCutDisplayThrough = subtract([frontHollowBody], tools = [displayThroughCutter])
+frontCutDisplayRecess = subtract([frontCutDisplayThrough], tools = [displayRecessCutter])
+frontCutCamera = subtract([frontCutDisplayRecess], tools = [cameraThroughCutter])
+frontCutSmallButtons = subtract([frontCutCamera], tools = smallButtonCutters)
+frontCutEmergency = subtract([frontCutSmallButtons], tools = [emergencyButtonCutter])
+frontCutLeds = subtract([frontCutEmergency], tools = ledCutters)
+frontCutMicrophone = subtract([frontCutLeds], tools = [microphoneCutter])
+frontCutSpeakerCenter = subtract([frontCutMicrophone], tools = [speakerCutterCenter])
+frontCutSpeakerLeft = subtract([frontCutSpeakerCenter], tools = [speakerCutterLeft])
+frontCutSpeakerRight = subtract([frontCutSpeakerLeft], tools = [speakerCutterRight])
+frontCutSpeakerUpperLeft = subtract([frontCutSpeakerRight], tools = [speakerCutterUpperLeft])
+frontCutSpeakerUpperRight = subtract([frontCutSpeakerUpperLeft], tools = [speakerCutterUpperRight])
+frontCutSpeakerLowerLeft = subtract([frontCutSpeakerUpperRight], tools = [speakerCutterLowerLeft])
+frontCutSpeakerLowerRight = subtract([frontCutSpeakerLowerLeft], tools = [speakerCutterLowerRight])
+frontCutRibbon = subtract([frontCutSpeakerLowerRight], tools = [ribbonChannelCutter])
+frontSkin = subtract([frontCutRibbon], tools = [harnessChannelCutter])
+  |> appearance(color = oliveGreen, roughness = 82, metalness = 0)
+
+cameraGuardOuter = clone(unitCylY)
+  |> scale(
+       x = 20,
+       y = 2.4,
+       z = 20,
+       global = true,
+     )
+  |> translate(y = -23.1mm, z = cameraCenterZ, global = true)
+cameraGuardInner = clone(unitCylY)
+  |> scale(
+       x = cameraRecessDiameter / 1mm,
+       y = 3.4,
+       z = cameraRecessDiameter / 1mm,
+       global = true,
+     )
+  |> translate(y = -23.1mm, z = cameraCenterZ, global = true)
+cameraGuardRing = subtract([cameraGuardOuter], tools = [cameraGuardInner])
+  |> appearance(color = deepOlive, roughness = 86, metalness = 0)
+
+m3BossOuter = clone(unitCylY)
+  |> scale(
+       x = shellBossDiameter / 1mm,
+       y = 18.8,
+       z = shellBossDiameter / 1mm,
+       global = true,
+     )
+m3BossBore = clone(unitCylY)
+  |> scale(
+       x = insertPilotDiameter / 1mm,
+       y = 20,
+       z = insertPilotDiameter / 1mm,
+       global = true,
+     )
+m3BossRing = subtract([m3BossOuter], tools = [m3BossBore])
+  |> appearance(color = oliveGreen, roughness = 82, metalness = 0)
+m3BossTopRight = clone(m3BossRing)
+  |> translate(
+       x = shellFastenerX,
+       y = -10.8mm,
+       z = shellFastenerZ,
+       global = true,
+     )
+m3BossTopLeft = clone(m3BossRing)
+  |> translate(
+       x = -shellFastenerX,
+       y = -10.8mm,
+       z = shellFastenerZ,
+       global = true,
+     )
+m3BossBottomRight = clone(m3BossRing)
+  |> translate(
+       x = shellFastenerX,
+       y = -10.8mm,
+       z = -shellFastenerZ,
+       global = true,
+     )
+m3BossBottomLeft = clone(m3BossRing)
+  |> translate(
+       x = -shellFastenerX,
+       y = -10.8mm,
+       z = -shellFastenerZ,
+       global = true,
+     )
+
+displayPillarOuter = clone(unitCylY)
+  |> scale(
+       x = 6,
+       y = 5.4,
+       z = 6,
+       global = true,
+     )
+displayPillarBore = clone(unitCylY)
+  |> scale(
+       x = 2.7,
+       y = 6.4,
+       z = 2.7,
+       global = true,
+     )
+displayPillar = subtract([displayPillarOuter], tools = [displayPillarBore])
+  |> appearance(color = oliveGreen, roughness = 82, metalness = 0)
+displayPillarTopRight = clone(displayPillar)
+  |> translate(
+       x = 39mm,
+       y = -17.5mm,
+       z = 60mm,
+       global = true,
+     )
+displayPillarTopLeft = clone(displayPillar)
+  |> translate(
+       x = -39mm,
+       y = -17.5mm,
+       z = 60mm,
+       global = true,
+     )
+displayPillarBottomRight = clone(displayPillar)
+  |> translate(
+       x = 39mm,
+       y = -17.5mm,
+       z = 4mm,
+       global = true,
+     )
+displayPillarBottomLeft = clone(displayPillar)
+  |> translate(
+       x = -39mm,
+       y = -17.5mm,
+       z = 4mm,
+       global = true,
+     )
+
+cameraPillarOuter = clone(unitCylY)
+  |> scale(
+       x = 5.5,
+       y = 6.2,
+       z = 5.5,
+       global = true,
+     )
+cameraPillarBore = clone(unitCylY)
+  |> scale(
+       x = 2.4,
+       y = 7.2,
+       z = 2.4,
+       global = true,
+     )
+cameraPillar = subtract([cameraPillarOuter], tools = [cameraPillarBore])
+  |> appearance(color = oliveGreen, roughness = 82, metalness = 0)
+cameraPillarTopLeft = clone(cameraPillar)
+  |> translate(
+       x = -10.5mm,
+       y = -17.1mm,
+       z = 4.5mm,
+       global = true,
+     )
+cameraPillarTopRight = clone(cameraPillar)
+  |> translate(
+       x = 10.5mm,
+       y = -17.1mm,
+       z = 4.5mm,
+       global = true,
+     )
+cameraPillarBottomLeft = clone(cameraPillar)
+  |> translate(
+       x = -10.5mm,
+       y = -17.1mm,
+       z = -8mm,
+       global = true,
+     )
+cameraPillarBottomRight = clone(cameraPillar)
+  |> translate(
+       x = 8.9mm,
+       y = -17.1mm,
+       z = -8mm,
+       global = true,
+     )
+
+smallGuideOuter = clone(unitBox)
+  |> scale(
+       x = 10,
+       y = 5.4,
+       z = 10,
+       global = true,
+     )
+smallGuideInner = clone(unitBox)
+  |> scale(
+       x = 7.8,
+       y = 6.4,
+       z = 7.8,
+       global = true,
+     )
+smallGuideRing = subtract([smallGuideOuter], tools = [smallGuideInner])
+  |> appearance(color = deepOlive, roughness = 84, metalness = 0)
+smallGuideSeed = clone(smallGuideRing)
+  |> translate(
+       x = -30mm,
+       y = -17.6mm,
+       z = -25mm,
+       global = true,
+     )
+smallGuides = smallGuideSeed
+  |> patternLinear3d(instances = 5, distance = 15mm, axis = X)
+emergencyGuideOuter = clone(unitCylY)
+  |> scale(
+       x = 22,
+       y = 5.4,
+       z = 22,
+       global = true,
+     )
+emergencyGuideInner = clone(unitCylY)
+  |> scale(
+       x = 18,
+       y = 6.4,
+       z = 18,
+       global = true,
+     )
+emergencyGuide = subtract([emergencyGuideOuter], tools = [emergencyGuideInner])
+  |> translate(
+       x = 24mm,
+       y = -17.6mm,
+       z = -57mm,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 84, metalness = 0)
+speakerMountOuter = clone(unitCylY)
+  |> scale(
+       x = 34,
+       y = 5.4,
+       z = 34,
+       global = true,
+     )
+speakerMountInner = clone(unitCylY)
+  |> scale(
+       x = 29,
+       y = 6.4,
+       z = 29,
+       global = true,
+     )
+speakerMount = subtract([speakerMountOuter], tools = [speakerMountInner])
+  |> translate(
+       x = -25mm,
+       y = -17.6mm,
+       z = -58mm,
+       global = true,
+     )
+  |> appearance(color = deepOlive, roughness = 84, metalness = 0)
+alignmentSocketOuter = clone(unitCylY)
+  |> scale(
+       x = 6,
+       y = 4,
+       z = 6,
+       global = true,
+     )
+alignmentSocketBore = clone(unitCylY)
+  |> scale(
+       x = 3.4,
+       y = 5,
+       z = 3.4,
+       global = true,
+     )
+alignmentSocketRing = subtract([alignmentSocketOuter], tools = [alignmentSocketBore])
+  |> appearance(color = oliveGreen, roughness = 82, metalness = 0)
+alignmentSocketRight = clone(alignmentSocketRing)
+  |> translate(
+       x = 30mm,
+       y = -2mm,
+       z = 79mm,
+       global = true,
+     )
+alignmentSocketLeft = clone(alignmentSocketRing)
+  |> translate(
+       x = -30mm,
+       y = -2mm,
+       z = 79mm,
+       global = true,
+     )
+
+export frontShellAssembly = flatten([
+  frontSkin,
+  cameraGuardRing,
+  m3BossTopRight,
+  m3BossTopLeft,
+  m3BossBottomRight,
+  m3BossBottomLeft,
+  displayPillarTopRight,
+  displayPillarTopLeft,
+  displayPillarBottomRight,
+  displayPillarBottomLeft,
+  cameraPillarTopLeft,
+  cameraPillarTopRight,
+  cameraPillarBottomLeft,
+  cameraPillarBottomRight,
+  smallGuides,
+  emergencyGuide,
+  speakerMount,
+  alignmentSocketRight,
+  alignmentSocketLeft
+])
+
+hide(frontOuterProfile)
+hide(frontInnerProfile)
+hide(unitBox)
+hide(unitCylY)
+frontShellAssembly

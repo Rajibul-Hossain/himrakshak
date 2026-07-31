@@ -1,0 +1,94 @@
+// Rear grip insert
+// Chamfered black grip panel with diagonal ribs and a protected flat logo area.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+
+gripWidth = 64mm
+gripHeight = 86mm
+gripChamfer = 8mm
+
+gripProfile = sketch(on = XZ) {
+  bottom = line(start = [var -24mm, var -43mm], end = [var 24mm, var -43mm])
+  bottomRight = line(start = [var 24mm, var -43mm], end = [var 32mm, var -35mm])
+  right = line(start = [var 32mm, var -35mm], end = [var 32mm, var 35mm])
+  topRight = line(start = [var 32mm, var 35mm], end = [var 24mm, var 43mm])
+  top = line(start = [var 24mm, var 43mm], end = [var -24mm, var 43mm])
+  topLeft = line(start = [var -24mm, var 43mm], end = [var -32mm, var 35mm])
+  left = line(start = [var -32mm, var 35mm], end = [var -32mm, var -35mm])
+  bottomLeft = line(start = [var -32mm, var -35mm], end = [var -24mm, var -43mm])
+  coincident([bottom.end, bottomRight.start])
+  coincident([bottomRight.end, right.start])
+  coincident([right.end, topRight.start])
+  coincident([topRight.end, top.start])
+  coincident([top.end, topLeft.start])
+  coincident([topLeft.end, left.start])
+  coincident([left.end, bottomLeft.start])
+  coincident([bottomLeft.end, bottom.start])
+  horizontal(bottom)
+  vertical(right)
+  horizontal(top)
+  vertical(left)
+  horizontalDistance([bottom.start, bottom.end]) == gripWidth - (2 * gripChamfer)
+  verticalDistance([right.start, right.end]) == gripHeight - (2 * gripChamfer)
+  horizontalDistance([bottomRight.start, bottomRight.end]) == gripChamfer
+  verticalDistance([bottomRight.start, bottomRight.end]) == gripChamfer
+  horizontalDistance([topRight.end, topRight.start]) == gripChamfer
+  verticalDistance([topRight.start, topRight.end]) == gripChamfer
+  horizontalDistance([topLeft.end, topLeft.start]) == gripChamfer
+  verticalDistance([topLeft.end, topLeft.start]) == gripChamfer
+  horizontalDistance([bottomLeft.start, bottomLeft.end]) == gripChamfer
+  verticalDistance([bottomLeft.end, bottomLeft.start]) == gripChamfer
+  horizontalDistance([ORIGIN, right.start]) == gripWidth / 2
+  verticalDistance([ORIGIN, top.start]) == gripHeight / 2
+}
+gripRegion = region(
+  segments = [
+    gripProfile.bottom,
+    gripProfile.bottomRight
+  ],
+  intersectionIndex = -1,
+  direction = CCW,
+)
+gripPanel = extrude(gripRegion, length = 2mm, symmetric = true)
+  |> appearance(color = tacticalBlack, roughness = 92, metalness = 0)
+
+grooveSeed = clone(unitBox)
+  |> scale(
+       x = 48,
+       y = 1.8,
+       z = 3,
+       global = true,
+     )
+  |> rotate(axis = Y, angle = 28deg, global = true)
+  |> translate(y = 1.7mm, z = -24mm, global = true)
+  |> appearance(color = graphite, roughness = 78, metalness = 0)
+groove2 = clone(grooveSeed)
+  |> translate(z = 10mm, global = true)
+groove3 = clone(grooveSeed)
+  |> translate(z = 20mm, global = true)
+groove4 = clone(grooveSeed)
+  |> translate(z = 30mm, global = true)
+logoPad = clone(unitBox)
+  |> scale(
+       x = 44,
+       y = 1.8,
+       z = 18,
+       global = true,
+     )
+  |> translate(y = 1.7mm, z = 28mm, global = true)
+  |> appearance(color = graphite, roughness = 74, metalness = 0)
+
+export rearGrip = flatten([
+  gripPanel,
+  grooveSeed,
+  groove2,
+  groove3,
+  groove4,
+  logoPad
+])
+
+hide(gripProfile)
+hide(unitBox)
+rearGrip

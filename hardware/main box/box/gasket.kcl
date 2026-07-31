@@ -1,0 +1,39 @@
+// Perimeter gasket frame
+// Four-part compressible gasket representation around the shell nesting lip.
+@settings(defaultLengthUnit = mm, kclVersion = 2.0, experimentalFeatures = allow)
+
+import * from "parameters.kcl"
+import unitBox from "unit_box.kcl"
+
+gasketTop = clone(unitBox)
+  |> scale(
+       x = 84,
+       y = 1.2,
+       z = 1.6,
+       global = true,
+     )
+  |> translate(z = 79.2mm, global = true)
+  |> appearance(color = rubberBlack, roughness = 96, metalness = 0)
+gasketBottom = clone(gasketTop)
+  |> translate(z = -158.4mm, global = true)
+gasketRight = clone(unitBox)
+  |> scale(
+       x = 1.6,
+       y = 1.2,
+       z = 157,
+       global = true,
+     )
+  |> translate(x = 42.2mm, global = true)
+  |> appearance(color = rubberBlack, roughness = 96, metalness = 0)
+gasketLeft = clone(gasketRight)
+  |> translate(x = -84.4mm, global = true)
+
+export perimeterGasket = flatten([
+  gasketTop,
+  gasketBottom,
+  gasketRight,
+  gasketLeft
+])
+
+hide(unitBox)
+perimeterGasket
