@@ -91,3 +91,85 @@ void startCameraServer() {
     httpd_register_uri_handler(stream_httpd, &stream_uri);
   }
 }
+// ==========================================
+// 4. SETUP & MAIN LOOP
+// ==========================================
+void setup() {
+  Serial.begin(115200);
+  
+  // 1. Init Servo
+  ledcSetup(PWM_CHANNEL, PWM_FREQ, PWM_RES);
+  ledcAttachPin(SERVO_PIN, PWM_CHANNEL);
+  setServoAngle(0); // Start with payload door closed
+
+  // 2. Init Camera
+  camera_config_t config;
+  config.ledc_channel = LEDC_CHANNEL_0;
+  config.ledc_timer = LEDC_TIMER_0;
+  config.pin_d0 = Y2_GPIO_NUM;
+  config.pin_d1 = Y3_GPIO_NUM;
+  config.pin_d2 = Y4_GPIO_NUM;
+  config.pin_d3 = Y5_GPIO_NUM;
+  config.pin_d4 = Y6_GPIO_NUM;
+  config.pin_d5 = Y7_GPIO_NUM;
+  config.pin_d6 = Y8_GPIO_NUM;
+  config.pin_d7 = Y9_GPIO_NUM;
+  config.pin_xclk = XCLK_GPIO_NUM;
+  config.pin_pclk = PCLK_GPIO_NUM;
+  config.pin_vsync = VSYNC_GPIO_NUM;
+  config.pin_href = HREF_GPIO_NUM;
+  config.pin_sccb_sda = SIOD_GPIO_NUM;
+  config.pin_sccb_scl = SIOC_GPIO_NUM;
+  config.pin_pwdn = PWDN_GPIO_NUM;
+  config.pin_reset = RESET_GPIO_NUM;
+  config.xclk_freq_hz = 10000000;     // Dropped to 10MHz to prevent heating
+  config.pixel_format = PIXFORMAT_JPEG;
+  config.frame_size = FRAMESIZE_QVGA; // 320x240 for high speed/low latency
+  config.jpeg_quality = 12;
+  config.fb_count = 1;
+
+  if (esp_camera_init(&config) != ESP_OK) {
+    Serial.println("Camera init failed");
+    return;
+  }
+
+  // 3. Connect to Wi-Fi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi connected");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  // 4. Start Services
+  startCameraServer();
+  udp.begin(udpPort);
+  ArduinoOTA.begin(); // Enable wireless flashing
+  
+  Serial.println("AEGIS Companion Computer Ready.");
+}
+
+void loop() {
+  // Handle Wireless Firmware Updates
+  ArduinoOTA.handle();
+
+  // Listen for UDP Commands from Laptop
+  int packetSize = udp.parsePacket();
+  if (packetSize) {
+    int len = udp.read(packetBuffer, 255);
+    if (len > 0) {
+      packetBuffer[len] = 0; 
+    }
+    
+    String command = String(packetBuffer);
+    if (command == "DROP") {
+      Serial.println("Executing Payload Drop!");
+      setServoAngle(90);  // Open 
+      delay(3000);        // Wait 3 seconds to ensure item falls
+      setServoAngle(0);   // Close 
+      Serial.println("Drop Complete.");
+    }
+  }
+}
