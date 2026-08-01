@@ -3,16 +3,21 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #include "esp_http_server.h"
-const char* ssid = "YOUR_WIFI_SSID";
-const char* password = "YOUR_WIFI_PASSWORD";
+
+const char* ssid = "Pluto_2022_1123"; 
+const char* password = "3145pluto";       
+
+// Servo Settings
 #define SERVO_PIN 14
-#define PWM_CHANNEL 2 
-#define PWM_FREQ 50  
-#define PWM_RES 16    
+#define PWM_FREQ 50   // 50Hz for standard SG90 servo
+#define PWM_RES 16    // 16-bit resolution
+
 // UDP Settings
 WiFiUDP udp;
 const int udpPort = 8888;
 char packetBuffer[255];
+
+// Camera Pins (AI-Thinker Module)
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -29,17 +34,21 @@ char packetBuffer[255];
 #define VSYNC_GPIO_NUM    25
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
+
 httpd_handle_t stream_httpd = NULL;
 
+// ==========================================
+// 3. CORE FUNCTIONS
+// ==========================================
 void setServoAngle(int angle) {
   // Map angle (0-180) to duty cycle for 16-bit resolution (0-65535)
   // 0 deg = 1ms = ~5% duty cycle = 3276
   // 180 deg = 2ms = ~10% duty cycle = 6553
   uint32_t duty = map(angle, 0, 180, 3276, 6553);
-  ledcWrite(PWM_CHANNEL, duty);
+  ledcWrite(SERVO_PIN, duty); // UPDATED FOR CORE V3: Uses PIN instead of CHANNEL
 }
 
-// MJPEG Stream Handler (Runs automatically on a separate background task)
+// MJPEG Stream Handler
 static esp_err_t stream_handler(httpd_req_t *req) {
   camera_fb_t * fb = NULL;
   esp_err_t res = ESP_OK;
@@ -76,6 +85,7 @@ static esp_err_t stream_handler(httpd_req_t *req) {
   }
   return res;
 }
+
 void startCameraServer() {
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
   config.server_port = 80;
@@ -91,15 +101,15 @@ void startCameraServer() {
     httpd_register_uri_handler(stream_httpd, &stream_uri);
   }
 }
+
 // ==========================================
 // 4. SETUP & MAIN LOOP
 // ==========================================
 void setup() {
   Serial.begin(115200);
   
-  // 1. Init Servo
-  ledcSetup(PWM_CHANNEL, PWM_FREQ, PWM_RES);
-  ledcAttachPin(SERVO_PIN, PWM_CHANNEL);
+  // 1. Init Servo (UPDATED FOR ESP32 CORE V3.x.x)
+  ledcAttach(SERVO_PIN, PWM_FREQ, PWM_RES);
   setServoAngle(0); // Start with payload door closed
 
   // 2. Init Camera
@@ -173,3 +183,4 @@ void loop() {
     }
   }
 }
+//rajibul is dead
